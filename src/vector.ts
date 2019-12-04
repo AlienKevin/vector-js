@@ -51,12 +51,12 @@ function decomposeVector(v: Vector): VectorCom {
     } else if (v.dim === 2) {
         return [mulR(cos(v.dir), v.mag), mulR(sin(v.dir), v.mag)];
     } else {
-        const xyMag = mulR(cos(v.dir[1]), v.mag);
-        const zMag = mulR(sin(v.dir[1]), v.mag);
+        const xyMag = Math.abs(mulR(cos(v.dir[1]), v.mag));
+        const z = mulR(sin(v.dir[1]), v.mag);
         return [
             mulR(cos(v.dir[0]), xyMag),
             mulR(sin(v.dir[0]), xyMag),
-            zMag,
+            z,
         ];
     }
 }
@@ -258,5 +258,6 @@ export {
     addVectors,
     negateVector,
     subtractVectors,
-    Vector
+    Vector,
+    decomposeVector
 };
