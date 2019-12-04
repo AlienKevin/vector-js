@@ -23,6 +23,21 @@ const v3a: Vector = {
     dir: -91.31101784567394,
     dim: 2
 };
+const v4a: Vector = {
+    mag: 561.7918129716737,
+    dir: [-90.283006983163, 79.85020764914537],
+    dim: 3
+}
+const v5a: Vector = {
+    mag: 4644.062984069014,
+    dir: [12.235433909933024, 30.958710965867475],
+    dim: 3
+}
+const v6a: Vector = {
+    mag: 23.248,
+    dir: [0, -90],
+    dim: 3
+}
 
 describe("Test vector addition", () => {
     test("com + com addition return components", () =>
@@ -50,7 +65,18 @@ describe("Test vector addition", () => {
     test("com + ang return components", () =>
         expect(addVectors([v1, v3a], "com")).toBeDeepCloseTo([0.77, -8.05], 5)
     );
-
+    test("3d com + com return components", () =>
+        expect(addVectors([v4, v5], "com")).toBeDeepCloseTo([3891.51, 745.001, 2942], 2)
+    );
+    test("3d ang + com return components", () =>
+        expect(addVectors([v4a, v5], "com")).toBeDeepCloseTo([3891.51, 745.001, 2942], 2)
+    );
+    test("3d com + ang return components", () =>
+        expect(addVectors([v4, v5a], "com")).toBeDeepCloseTo([3891.51, 745.001, 2942], 2)
+    );
+    test("3d ang + ang return components", () =>
+        expect(addVectors([v4a, v5a], "com")).toBeDeepCloseTo([3891.51, 745.001, 2942], 2)
+    );
     test("2 vector addition return angles", () =>
         expect(addVectors([v1, v2], "ang")).toEqual({
             mag: Math.sqrt(2),
@@ -58,45 +84,60 @@ describe("Test vector addition", () => {
             dim: 2
         })
     );
-    test("2 vector addition return components", () =>
-        expect(addVectors([v4, v5], "com")).toBeDeepCloseTo([3891.51, 745.001, 2942], 2)
-    );
-    test("3 vector addition return components", () =>
+    test("com + com + com return components", () =>
         expect(addVectors([v1, v2, v3], "com")).toEqual([0.77, -11.05])
     );
-    test("3 vector addition return angles", () =>
+    test("com + com + com return angles", () =>
         expect(addVectors([v1, v2, v3], "ang")).toEqual({
             mag: Math.sqrt(0.77**2 + 11.05**2),
             dir: -86.01388695010866,
             dim: 2
         })
     );
-    test("3 vector addition return components", () =>
+    test("3d com + com + com return components", () =>
         expect(addVectors([v4, v5, v6], "com")).toBeDeepCloseTo([3891.51, 745.001, 2918.752], 2)
+    );
+    test("3d ang + com + com return components", () =>
+        expect(addVectors([v4a, v5, v6], "com")).toBeDeepCloseTo([3891.51, 745.001, 2918.752], 2)
+    );
+    test("3d ang + com + ang return components", () =>
+        expect(addVectors([v4a, v5, v6a], "com")).toBeDeepCloseTo([3891.51, 745.001, 2918.752], 2)
+    );
+    test("3d ang + ang + ang return components", () =>
+        expect(addVectors([v4a, v5a, v6a], "com")).toBeDeepCloseTo([3891.51, 745.001, 2918.752], 2)
     );
 });
 
 describe("Negate one vector", () => {
-    test("1 vector negation return components", () =>
+    test("com negation return components", () =>
         expect(negateVector(v1)).toEqual([-1, -2])
     )
-    test("1 vector negation return components", () =>
+    test("ang negation return components", () =>
         expect(negateVector(v1a)).toBeDeepCloseTo([-1, -2], 5)
     )
-    test("1 vector negation return components", () =>
+    test("com negation return components", () =>
         expect(negateVector(v2)).toEqual([0, 3])
     )
-    test("1 vector negation return components", () =>
+    test("ang negation return components", () =>
         expect(negateVector(v2a)).toEqual([0, 3])
     )
-    test("1 vector negation return components", () =>
+    test("com negation return components", () =>
         expect(negateVector(v3)).toEqual([0.23, 10.05])
     )
-    test("1 vector negation return components", () =>
+    test("ang negation return components", () =>
         expect(negateVector(v3a)).toBeDeepCloseTo([0.23, 10.05], 5)
     )
-    test("1 vector negation return components", () =>
+    test("3d com negation return components", () =>
         expect(negateVector(v4)).toEqual([0.489, 98.999, -553])
+    )
+    test("3d ang negation return components", () =>
+        expect(negateVector(v4a)).toBeDeepCloseTo([0.489, 98.999, -553], 5)
+    )
+    test("3d com negation return components", () =>
+        expect(negateVector(v5)).toEqual([-3892, -844, -2389])
+    )
+    test("3d ang negation return components", () =>
+        expect(negateVector(v5a)).toBeDeepCloseTo([-3892, -844, -2389], 5)
     )
     test("1 vector negation return angles", () =>
         expect(negateVector(v1, "ang")).toBeDeepCloseTo({
