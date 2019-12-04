@@ -1,3 +1,9 @@
+import {Decimal} from 'decimal.js';
+
+type Num = number | Decimal
+
+const PI = Decimal.acos(-1);
+
 type Vector = VectorAng | VectorCom;
 
 // vector form can be either angular or component
@@ -41,15 +47,15 @@ function decomposeVector(v: Vector): VectorCom {
         return v;
     }
     if (v.dim === 1) {
-        return [v.dir * v.mag];
+        return [mulR(v.dir, v.mag)];
     } else if (v.dim === 2) {
-        return [cos(v.dir) * v.mag, sin(v.dir) * v.mag];
+        return [mulR(cos(v.dir), v.mag), mulR(sin(v.dir), v.mag)];
     } else {
-        const xyMag = cos(v.dir[1]) * v.mag;
-        const zMag = sin(v.dir[1]) * v.mag;
+        const xyMag = mulR(cos(v.dir[1]), v.mag);
+        const zMag = mulR(sin(v.dir[1]), v.mag);
         return [
-            cos(v.dir[0]) * xyMag,
-            sin(v.dir[0]) * xyMag,
+            mulR(cos(v.dir[0]), xyMag),
+            mulR(sin(v.dir[0]), xyMag),
             zMag,
         ];
     }
@@ -76,14 +82,14 @@ function angularizeVector(v: Vector): VectorAng {
         }
     } else if (v.length === 2) {
         return {
-            mag: Math.sqrt(v[0]**2 + v[1]**2),
-            dir: atan2(v[1], v[0]),
+            mag: sqrtR(sq(v[0]).add(sq(v[1]))),
+            dir: atan2R(v[1], v[0]),
             dim: 2
         }
     } else if (v.length === 3) {
         return {
-            mag: Math.sqrt(v[0]**2 + v[1]**2 + v[2]**2),
-            dir: [atan2(v[1], v[0]), atan2(v[2], Math.sqrt(v[0]**2 + v[1]**2))],
+            mag: sqrtR(sq(v[0]).add(sq(v[1])).add(sq(v[2]))),
+            dir: [atan2R(v[1], v[0]), atan2R(v[2], sqrtR(sq(v[0]).add(sq(v[1]))))],
             dim: 3
         }
     }
@@ -126,11 +132,11 @@ function negateVector(v: Vector, form?: VectorForm): Vector {
                 v.dim === 2
                 ? {
                     ...v,
-                    dir: lockDegrees(v.dir + 180)
+                    dir: lockDegrees(addR(v.dir,180))
                 }
                 : {
                     ...v,
-                    dir: [lockDegrees(v.dir[0] + 180), lockDegrees(v.dir[1] + 180)]
+                    dir: [lockDegrees(addR(v.dir[0], 180)), lockDegrees(addR(v.dir[1], 180))]
                 }
             )
         ),
@@ -178,24 +184,24 @@ function negate(num: number): number {
     )
 }
 
-function toDegrees(angle: number) {
-    return angle * (180 / Math.PI);
+function toDegrees(angle: Num): Decimal {
+    return new Decimal(angle).mul(new Decimal(180).div(PI));
 }
 
-function toRadians(angle) {
-    return angle * (Math.PI / 180);
+function toRadians(angle: Num): Decimal {
+    return new Decimal(angle).mul(PI.div(new Decimal(180)));
 }
 
-function sin(degrees: number) {
-    return Math.sin(toRadians(degrees))
+function sin(degrees: Num): Decimal {
+    return Decimal.sin(toRadians(degrees))
 }
 
-function cos(degrees: number) {
-    return Math.cos(toRadians(degrees))
+function cos(degrees: Num): Decimal {
+    return Decimal.cos(toRadians(degrees))
 }
 
-function atan2(y: number, x: number) {
-    return toDegrees(Math.atan2(y, x));
+function atan2R(y: Num, x: Num): number {
+    return toNumber(toDegrees(Decimal.atan2(y, x)));
 }
 
 // lock degrees within (-180, 180]
@@ -206,6 +212,46 @@ function lockDegrees(degrees: number) {
         ? within0and360 - 360
         : within0and360
     );
+}
+
+function mulR(a: Num, b: Num): number {
+    return binaryR(a, b, Decimal.mul.bind(Decimal));
+}
+
+function mul(a: Num, b: Num): Decimal {
+    return binary(a, b, Decimal.mul);
+}
+
+function addR(a: Num, b: Num): number {
+    return binaryR(a, b, Decimal.add.bind(Decimal));
+}
+
+function add(a: Num, b: Num): Decimal {
+    return binary(a, b, Decimal.add);
+}
+
+function binaryR(a: Num, b: Num, func: ((a: Decimal, b: Decimal) => Decimal)): number {
+    return toNumber(binary(a, b, func));
+}
+
+function binary(a: Num, b: Num, func: ((a: Decimal, b: Decimal) => Decimal)): Decimal {
+    return func(new Decimal(a), new Decimal(b));
+}
+
+function sq(num: Num): Decimal {
+    return Decimal.pow(new Decimal(num), new Decimal(2));
+}
+
+function sqrtR(num: Num): number {
+    return toNumber(sqrt(num));
+}
+
+function sqrt(num: Num): Decimal {
+    return Decimal.sqrt(new Decimal(num));
+}
+
+function toNumber(num: Decimal): number {
+    return num.toDecimalPlaces(17).toNumber();
 }
 
 export {
