@@ -1,10 +1,16 @@
 type Vector = VectorAng | VectorCom;
 
+// vector form can be either angular or component
+type VectorForm = "ang" | "com";
+const defaultForm: VectorForm = "com";
+
 // angular vector
 type VectorAng = VectorAng1 | VectorAng2 | VectorAng3;
 
+type Sign = 1 | -1;
+
 // one dimensional vector
-type Dir1 = 1 | -1;
+type Dir1 = Sign;
 type VectorAng1 = {
     mag: number,
     dir: Dir1,
@@ -31,8 +37,7 @@ type VectorAng3 = {
 type VectorCom = number[];
 
 function decomposeVector(v: Vector): VectorCom {
-    // already decomposed
-    if (Array.isArray(v)) {
+    if (isVectorCom(v)) {
         return v;
     }
     if (v.dim === 1) {
@@ -50,7 +55,11 @@ function decomposeVector(v: Vector): VectorCom {
     }
 }
 
-function angularizeVector(v: VectorCom): VectorAng {
+function angularizeVector(v: Vector): VectorAng {
+    if (!isVectorCom(v)) {
+        return v;
+    }
+
     if (v.length > 3) {
         throw new Error("Too many vector components, must be between 1 and 3.");
     }
@@ -98,20 +107,70 @@ function addVectorComs(vectors: VectorCom[]): VectorCom {
     );
 }
 
-function addVectors(vectors: Vector[], resultForm: "ang" | "com"): Vector {
+function addVectors(vectors: Vector[], form?: VectorForm): Vector {
     const sumVector = addVectorComs(vectors.map(decomposeVector));
-    return (
-        resultForm === "ang"
-        ? angularizeVector(sumVector)
-        : sumVector
+    return formVector(sumVector, form);
+}
+
+function negateVector(v: Vector, form?: VectorForm): Vector {
+    return formVector(
+        isVectorCom(v)
+        ? v.map((value) => negate(value))
+        : (
+            v.dim === 1
+            ? {
+                ...v,
+                dir: negateSign(v.dir)
+            }
+            : (
+                v.dim === 2
+                ? {
+                    ...v,
+                    dir: lockDegrees(v.dir + 180)
+                }
+                : {
+                    ...v,
+                    dir: [lockDegrees(v.dir[0] + 180), lockDegrees(v.dir[1] + 180)]
+                }
+            )
+        ),
+        form
     );
 }
 
-function sign(num: number): 1 | -1 {
+function formVector(v: Vector, form = defaultForm): Vector {
+    return (
+        form === "ang"
+        ? angularizeVector(v)
+        : decomposeVector(v)
+    );
+}
+
+function isVectorCom(v: Vector): v is VectorCom {
+    return Array.isArray(v);
+}
+
+function sign(num: number): Sign {
     return (
         num >= 0
         ? 1
         : -1
+    )
+}
+
+function negateSign(sign: Sign): Sign {
+    return (
+        sign > 0
+        ? -1
+        : 1
+    )
+}
+
+function negate(num: number): number {
+    return (
+        num === 0
+        ? 0 // avoid -0
+        : -num
     )
 }
 
@@ -135,6 +194,17 @@ function atan2(y: number, x: number) {
     return toDegrees(Math.atan2(y, x));
 }
 
+// lock degrees within (-180, 180]
+function lockDegrees(degrees: number) {
+    const within0and360 = (degrees % 360);
+    return (
+        within0and360 > 180
+        ? within0and360 - 360
+        : within0and360
+    );
+}
+
 export {
-    addVectors
+    addVectors,
+    negateVector
 };

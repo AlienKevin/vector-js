@@ -1,4 +1,6 @@
-import { addVectors } from "../src/vector";
+import { addVectors, negateVector } from "../src/vector";
+import {toMatchCloseTo} from 'jest-matcher-deep-close-to';
+expect.extend({toMatchCloseTo});
 
 const v1 = [1, 2];
 const v2 = [0, -3];
@@ -26,3 +28,36 @@ describe("Test vector addition", () => {
         })
     );
 });
+
+describe("Negate one vector", () => {
+    test("1 vector negation return components", () =>
+        expect(negateVector(v1)).toEqual([-1, -2])
+    )
+    test("1 vector negation return components", () =>
+        expect(negateVector(v2)).toEqual([0, 3])
+    )
+    test("1 vector negation return components", () =>
+        expect(negateVector(v3)).toEqual([0.23, 10.05])
+    )
+    test("1 vector negation return angles", () =>
+        expect(negateVector(v1, "ang")).toMatchCloseTo({
+            mag: 2.23607,
+            dir: -116.56505,
+            dim: 2
+        }, 5)
+    )
+    test("1 vector negation return angles", () =>
+        expect(negateVector(v2, "ang")).toEqual({
+            mag: 3,
+            dir: 90,
+            dim: 2
+        })
+    )
+    test("1 vector negation return angles", () =>
+        expect(negateVector(v3, "ang")).toMatchCloseTo({
+            mag: 10.0526315,
+            dir: 88.68898215432604,
+            dim: 2
+        }, 5)
+    )
+})
