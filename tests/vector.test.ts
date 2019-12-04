@@ -175,4 +175,17 @@ describe("Test vector subtraction", () => {
     test("ang - ang", () =>
         expect(subtractVectors(v1a, v1a)).toBeDeepCloseTo([0, 0], 5)
     )
+
+    test("3d com - com", () =>
+        expect(subtractVectors(v4, v5)).toEqual([-3892.489, -942.999, -1836])
+    )
+    test("3d com - ang", () =>
+        expect(subtractVectors(v4, v5a)).toBeDeepCloseTo([-3892.489, -942.999, -1836], 5)
+    )
+    test("3d ang - com", () =>
+        expect(subtractVectors(v4a, v5)).toBeDeepCloseTo([-3892.489, -942.999, -1836], 5)
+    )
+    test("3d ang - ang", () =>
+        expect(subtractVectors(v4a, v5a)).toBeDeepCloseTo([-3892.489, -942.999, -1836], 5)
+    )
 })
