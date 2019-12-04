@@ -10,15 +10,15 @@ describe("Test vector addition", () => {
     test("2 vector addition return components", () =>
         expect(addVectors([v1, v2], "com")).toEqual([1, -1])
     );
-    test("3 vector addition return components", () =>
-        expect(addVectors([v1, v2, v3], "com")).toEqual([0.77, -11.05])
-    );
     test("2 vector addition return angles", () =>
         expect(addVectors([v1, v2], "ang")).toEqual({
             mag: Math.sqrt(2),
             dir: -45,
             dim: 2
         })
+    );
+    test("3 vector addition return components", () =>
+        expect(addVectors([v1, v2, v3], "com")).toEqual([0.77, -11.05])
     );
     test("3 vector addition return angles", () =>
         expect(addVectors([v1, v2, v3], "ang")).toEqual({
