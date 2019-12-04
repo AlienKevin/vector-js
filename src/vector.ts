@@ -138,6 +138,10 @@ function negateVector(v: Vector, form?: VectorForm): Vector {
     );
 }
 
+function subtractVectors(v1: Vector, v2: Vector, form?: VectorForm): Vector {
+    return addVectors([v1, negateVector(v2)], form);
+}
+
 function formVector(v: Vector, form = defaultForm): Vector {
     return (
         form === "ang"
@@ -206,5 +210,7 @@ function lockDegrees(degrees: number) {
 
 export {
     addVectors,
-    negateVector
+    negateVector,
+    subtractVectors,
+    Vector
 };

@@ -1,4 +1,4 @@
-import { addVectors, negateVector } from "../src/vector";
+import { addVectors, negateVector, subtractVectors, Vector } from "../src/vector";
 import {toBeDeepCloseTo} from 'jest-matcher-deep-close-to';
 expect.extend({toBeDeepCloseTo});
 
@@ -8,6 +8,11 @@ const v3 = [-0.23, -10.05];
 const v4 = [-0.489, -98.999, 553];
 const v5 = [3892, 844, 2389];
 const v6 = [0, 0, -23.248];
+const v1a: Vector = {
+    mag: Math.sqrt(5),
+    dir: 63.4349488,
+    dim: 2
+};
 
 describe("Test vector addition", () => {
     test("2 vector addition return components", () =>
@@ -71,5 +76,20 @@ describe("Negate one vector", () => {
             dir: 88.68898215432604,
             dim: 2
         }, 5)
+    )
+})
+
+describe("Test vector subtraction", () => {
+    test("com - com", () =>
+        expect(subtractVectors(v1, v2)).toEqual([1, 5])
+    )
+    test("com - ang", () =>
+        expect(subtractVectors(v1, v1a)).toBeDeepCloseTo([0, 0], 5)
+    )
+    test("ang - com", () =>
+        expect(subtractVectors(v1a, v2)).toBeDeepCloseTo([1, 5], 5)
+    )
+    test("ang - ang", () =>
+        expect(subtractVectors(v1a, v1a)).toBeDeepCloseTo([0, 0], 5)
     )
 })
