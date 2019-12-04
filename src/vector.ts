@@ -67,14 +67,14 @@ function angularizeVector(v: VectorCom): VectorAng {
         }
     } else if (v.length === 2) {
         return {
-            mag: Math.sqrt(v[0]^2 + v[1]^2),
+            mag: Math.sqrt(v[0]**2 + v[1]**2),
             dir: atan2(v[1], v[0]),
             dim: 2
         }
     } else if (v.length === 3) {
         return {
-            mag: Math.sqrt(v[0]^2 + v[1]^2 + v[2]^2),
-            dir: [atan2(v[1], v[0]), atan2(v[2], Math.sqrt(v[0]^2 + v[1]^2))],
+            mag: Math.sqrt(v[0]**2 + v[1]**2 + v[2]**2),
+            dir: [atan2(v[1], v[0]), atan2(v[2], Math.sqrt(v[0]**2 + v[1]**2))],
             dim: 3
         }
     }
