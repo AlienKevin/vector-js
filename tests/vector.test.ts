@@ -2,6 +2,9 @@ import { addVectors, negateVector, subtractVectors, Vector, angularizeVector, de
 import {toBeDeepCloseTo} from 'jest-matcher-deep-close-to';
 expect.extend({toBeDeepCloseTo});
 
+// number of decimal places for toBeDeepCloseTo() comparison
+const dp = 10;
+
 // 1d vectors
 const v1d1 = [4.4782];
 const v1d1a: Vector = {
@@ -27,7 +30,7 @@ const v1 = [1, 2];
 const v2 = [0, -3];
 const v3 = [-0.23, -10.05];
 const v1a: Vector = {
-    mag: Math.sqrt(5),
+    mag: 2.23606797749979,
     dir: 63.43494882292201,
     dim: 2
 };
@@ -103,22 +106,22 @@ describe("Test vector form conversion", () => {
             expect(decomposeVector(v1d3a)).toEqual(v1d3)
         });
         test("2d", () => {
-            expect(decomposeVector(v1a)).toBeDeepCloseTo(v1)
+            expect(decomposeVector(v1a)).toBeDeepCloseTo(v1, dp)
         });
         test("2d", () => {
-            expect(decomposeVector(v2a)).toBeDeepCloseTo(v2)
+            expect(decomposeVector(v2a)).toBeDeepCloseTo(v2, dp)
         });
         test("2d", () => {
-            expect(decomposeVector(v3a)).toBeDeepCloseTo(v3)
+            expect(decomposeVector(v3a)).toBeDeepCloseTo(v3, dp)
         });
         test("3d", () => {
-            expect(decomposeVector(v4a)).toBeDeepCloseTo(v4)
+            expect(decomposeVector(v4a)).toBeDeepCloseTo(v4, dp)
         });
         test("3d", () => {
-            expect(decomposeVector(v5a)).toBeDeepCloseTo(v5)
+            expect(decomposeVector(v5a)).toBeDeepCloseTo(v5, dp)
         });
         test("3d", () => {
-            expect(decomposeVector(v6a)).toBeDeepCloseTo(v6)
+            expect(decomposeVector(v6a)).toBeDeepCloseTo(v6, dp)
         });
     });
 });
@@ -130,22 +133,22 @@ describe("Test vector addition", () => {
             expect(addVectors([v1d1, v1d2])).toEqual([4.22031])
         );
         test("ang + ang", () =>
-            expect(addVectors([v1d1a, v1d2a])).toBeDeepCloseTo([4.22031], 5)
+            expect(addVectors([v1d1a, v1d2a])).toBeDeepCloseTo([4.22031], dp)
         );
         test("ang + com", () =>
-            expect(addVectors([v1d1a, v1d2])).toBeDeepCloseTo([4.22031], 5)
+            expect(addVectors([v1d1a, v1d2])).toBeDeepCloseTo([4.22031], dp)
         );
         test("com + ang", () =>
-            expect(addVectors([v1d1, v1d2a])).toBeDeepCloseTo([4.22031], 5)
+            expect(addVectors([v1d1, v1d2a])).toBeDeepCloseTo([4.22031], dp)
         );
         test("0 com + 0 com", () =>
             expect(addVectors([v1d3, v1d3])).toEqual([0])
         );
         test("0 ang + 0 ang", () =>
-            expect(addVectors([v1d3a, v1d3a])).toBeDeepCloseTo([0], 5)
+            expect(addVectors([v1d3a, v1d3a])).toBeDeepCloseTo([0], dp)
         );
         test("0 ang + 0 com", () =>
-            expect(addVectors([v1d3a, v1d3])).toBeDeepCloseTo([0], 5)
+            expect(addVectors([v1d3a, v1d3])).toBeDeepCloseTo([0], dp)
         );
     })
 
@@ -154,26 +157,26 @@ describe("Test vector addition", () => {
             expect(addVectors([v1, v2], "com")).toEqual([1, -1])
         );
         test("ang + ang addition return components", () =>
-            expect(addVectors([v1a, v2a], "com")).toBeDeepCloseTo([1, -1], 5)
+            expect(addVectors([v1a, v2a], "com")).toBeDeepCloseTo([1, -1], dp)
         );
         test("ang + com return components", () =>
-            expect(addVectors([v1a, v2], "com")).toBeDeepCloseTo([1, -1], 5)
+            expect(addVectors([v1a, v2], "com")).toBeDeepCloseTo([1, -1], dp)
         );
         test("com + ang return components", () =>
-            expect(addVectors([v1, v2a], "com")).toBeDeepCloseTo([1, -1], 5)
+            expect(addVectors([v1, v2a], "com")).toBeDeepCloseTo([1, -1], dp)
         );
 
         test("com + com addition return components", () =>
-            expect(addVectors([v1, v3], "com")).toBeDeepCloseTo([0.77, -8.05], 5)
+            expect(addVectors([v1, v3], "com")).toBeDeepCloseTo([0.77, -8.05], dp)
         );
         test("ang + ang addition return components", () =>
-            expect(addVectors([v1a, v3a], "com")).toBeDeepCloseTo([0.77, -8.05], 5)
+            expect(addVectors([v1a, v3a], "com")).toBeDeepCloseTo([0.77, -8.05], dp)
         );
         test("ang + com return components", () =>
-            expect(addVectors([v1a, v3], "com")).toBeDeepCloseTo([0.77, -8.05], 5)
+            expect(addVectors([v1a, v3], "com")).toBeDeepCloseTo([0.77, -8.05], dp)
         );
         test("com + ang return components", () =>
-            expect(addVectors([v1, v3a], "com")).toBeDeepCloseTo([0.77, -8.05], 5)
+            expect(addVectors([v1, v3a], "com")).toBeDeepCloseTo([0.77, -8.05], dp)
         );
 
         test("2 vector addition return angles", () =>
@@ -229,7 +232,7 @@ describe("Negate one vector", () => {
         expect(negateVector(v1)).toEqual([-1, -2])
     )
     test("ang negation return components", () =>
-        expect(negateVector(v1a)).toBeDeepCloseTo([-1, -2], 5)
+        expect(negateVector(v1a)).toBeDeepCloseTo([-1, -2], dp)
     )
     test("com negation return components", () =>
         expect(negateVector(v2)).toEqual([0, 3])
@@ -241,26 +244,26 @@ describe("Negate one vector", () => {
         expect(negateVector(v3)).toEqual([0.23, 10.05])
     )
     test("ang negation return components", () =>
-        expect(negateVector(v3a)).toBeDeepCloseTo([0.23, 10.05], 5)
+        expect(negateVector(v3a)).toBeDeepCloseTo([0.23, 10.05], dp)
     )
     test("3d com negation return components", () =>
         expect(negateVector(v4)).toEqual([0.489, 98.999, -553])
     )
     test("3d ang negation return components", () =>
-        expect(negateVector(v4a)).toBeDeepCloseTo([0.489, 98.999, -553], 5)
+        expect(negateVector(v4a)).toBeDeepCloseTo([0.489, 98.999, -553], dp)
     )
     test("3d com negation return components", () =>
         expect(negateVector(v5)).toEqual([-3892, -844, -2389])
     )
     test("3d ang negation return components", () =>
-        expect(negateVector(v5a)).toBeDeepCloseTo([-3892, -844, -2389], 5)
+        expect(negateVector(v5a)).toBeDeepCloseTo([-3892, -844, -2389], dp)
     )
     test("1 vector negation return angles", () =>
         expect(negateVector(v1, "ang")).toBeDeepCloseTo({
-            mag: 2.23607,
-            dir: -116.56505,
+            mag: 2.23606797749979,
+            dir: -116.56505117707799,
             dim: 2
-        }, 5)
+        }, dp)
     )
     test("1 vector negation return angles", () =>
         expect(negateVector(v2, "ang")).toEqual({
@@ -271,10 +274,10 @@ describe("Negate one vector", () => {
     )
     test("1 vector negation return angles", () =>
         expect(negateVector(v3, "ang")).toBeDeepCloseTo({
-            mag: 10.0526315,
+            mag: 10.052631496279966,
             dir: 88.68898215432604,
             dim: 2
-        }, 5)
+        }, dp)
     )
 })
 
@@ -283,25 +286,25 @@ describe("Test vector subtraction", () => {
         expect(subtractVectors(v1, v2)).toEqual([1, 5])
     )
     test("com - ang", () =>
-        expect(subtractVectors(v1, v1a)).toBeDeepCloseTo([0, 0], 5)
+        expect(subtractVectors(v1, v1a)).toBeDeepCloseTo([0, 0], dp)
     )
     test("ang - com", () =>
-        expect(subtractVectors(v1a, v2)).toBeDeepCloseTo([1, 5], 5)
+        expect(subtractVectors(v1a, v2)).toBeDeepCloseTo([1, 5], dp)
     )
     test("ang - ang", () =>
-        expect(subtractVectors(v1a, v1a)).toBeDeepCloseTo([0, 0], 5)
+        expect(subtractVectors(v1a, v1a)).toBeDeepCloseTo([0, 0], dp)
     )
 
     test("3d com - com", () =>
         expect(subtractVectors(v4, v5)).toEqual([-3892.489, -942.999, -1836])
     )
     test("3d com - ang", () =>
-        expect(subtractVectors(v4, v5a)).toBeDeepCloseTo([-3892.489, -942.999, -1836], 5)
+        expect(subtractVectors(v4, v5a)).toBeDeepCloseTo([-3892.489, -942.999, -1836], dp)
     )
     test("3d ang - com", () =>
-        expect(subtractVectors(v4a, v5)).toBeDeepCloseTo([-3892.489, -942.999, -1836], 5)
+        expect(subtractVectors(v4a, v5)).toBeDeepCloseTo([-3892.489, -942.999, -1836], dp)
     )
     test("3d ang - ang", () =>
-        expect(subtractVectors(v4a, v5a)).toBeDeepCloseTo([-3892.489, -942.999, -1836], 5)
+        expect(subtractVectors(v4a, v5a)).toBeDeepCloseTo([-3892.489, -942.999, -1836], dp)
     )
 })
