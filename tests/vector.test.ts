@@ -1,4 +1,4 @@
-import { addVectors, negateVector, subtractVectors, Vector } from "../src/vector";
+import { addVectors, negateVector, subtractVectors, Vector, angularizeVector, decomposeVector } from "../src/vector";
 import {toBeDeepCloseTo} from 'jest-matcher-deep-close-to';
 expect.extend({toBeDeepCloseTo});
 
@@ -28,7 +28,7 @@ const v2 = [0, -3];
 const v3 = [-0.23, -10.05];
 const v1a: Vector = {
     mag: Math.sqrt(5),
-    dir: 63.4349488,
+    dir: 63.43494882292201,
     dim: 2
 };
 const v2a: Vector = {
@@ -61,6 +61,67 @@ const v6a: Vector = {
     dir: [0, -90],
     dim: 3
 }
+
+describe("Test vector form conversion", () => {
+    describe("com to ang", () => {
+        test("1d", () => {
+            expect(angularizeVector(v1d1)).toEqual(v1d1a)
+        });
+        test("1d", () => {
+            expect(angularizeVector(v1d2)).toEqual(v1d2a)
+        });
+        test("1d", () => {
+            expect(angularizeVector(v1d3)).toEqual(v1d3a)
+        });
+        test("2d", () => {
+            expect(angularizeVector(v1)).toBeDeepCloseTo(v1a)
+        });
+        test("2d", () => {
+            expect(angularizeVector(v2)).toBeDeepCloseTo(v2a)
+        });
+        test("2d", () => {
+            expect(angularizeVector(v3)).toBeDeepCloseTo(v3a)
+        });
+        test("3d", () => {
+            expect(angularizeVector(v4)).toBeDeepCloseTo(v4a)
+        });
+        test("3d", () => {
+            expect(angularizeVector(v5)).toBeDeepCloseTo(v5a)
+        });
+        test("3d", () => {
+            expect(angularizeVector(v6)).toBeDeepCloseTo(v6a)
+        });
+    });
+    describe("ang to com", () => {
+        test("1d", () => {
+            expect(decomposeVector(v1d1a)).toEqual(v1d1)
+        });
+        test("1d", () => {
+            expect(decomposeVector(v1d2a)).toEqual(v1d2)
+        });
+        test("1d", () => {
+            expect(decomposeVector(v1d3a)).toEqual(v1d3)
+        });
+        test("2d", () => {
+            expect(decomposeVector(v1a)).toBeDeepCloseTo(v1)
+        });
+        test("2d", () => {
+            expect(decomposeVector(v2a)).toBeDeepCloseTo(v2)
+        });
+        test("2d", () => {
+            expect(decomposeVector(v3a)).toBeDeepCloseTo(v3)
+        });
+        test("3d", () => {
+            expect(decomposeVector(v4a)).toBeDeepCloseTo(v4)
+        });
+        test("3d", () => {
+            expect(decomposeVector(v5a)).toBeDeepCloseTo(v5)
+        });
+        test("3d", () => {
+            expect(decomposeVector(v6a)).toBeDeepCloseTo(v6)
+        });
+    });
+});
 
 describe("Test vector addition", () => {
 
