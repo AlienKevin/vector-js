@@ -259,5 +259,6 @@ export {
     negateVector,
     subtractVectors,
     Vector,
-    decomposeVector
+    decomposeVector,
+    angularizeVector
 };
