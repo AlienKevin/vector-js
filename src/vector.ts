@@ -108,7 +108,7 @@ function addVectorComs(vectors: VectorCom[]): VectorCom {
 
     return vectors.reduce((sumV, v) =>
         sumV.map((sum, index) =>
-            sum + v[index]
+            addR(sum, v[index])
         )
     );
 }
